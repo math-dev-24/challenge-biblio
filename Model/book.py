@@ -34,8 +34,11 @@ class Book(DbModel):
             'book_type': self.book_type
         }
 
-    def __str__(self):
+    def register(self):
         self.instance.table('book').insert(self.get_json)
+
+    def get_all_books(self):
+        return self.instance.table('book').all()
 
 
 class Paperback(Book):

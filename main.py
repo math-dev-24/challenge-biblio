@@ -1,12 +1,12 @@
 from Core.printer import Message
-from Core.book import create_book
-
+from Controller.BookController import BookController
 LIST_COMMANDS: (str, ...) = (
     "Ajouter un livre", "Supprimer un livre", "Modifier un livre", "Emprunter un livre", "Retourner un livre",
     "Lister les livres", "Statistiques", "Quitter"
 )
 
 if __name__ == "__main__":
+    bookController = BookController()
 
     Message.title("Ma bibliothèque")
 
@@ -18,7 +18,7 @@ if __name__ == "__main__":
         action: str = Message.input()
 
         if action == "1":
-            create_book()
+            bookController.create_book()
         elif action == "2":
             print("Supprimer un livre")
         elif action == "3":
@@ -28,7 +28,7 @@ if __name__ == "__main__":
         elif action == "5":
             print("Retourner un livre")
         elif action == "6":
-            print("Lister les livres")
+            bookController.get_all_books()
         elif action == "7":
             print("Statistiques")
         elif action == "8":
