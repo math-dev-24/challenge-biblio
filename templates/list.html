@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Liste des livres</title>
+</head>
+<body>
+<main>
+    <h1 class="text-3xl font-bold text-center mt-4 mb-8">Liste des livres</h1>
+    <div class="container mx-auto">
+        <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Accueil</a>
+        <a href="/add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ajouter un livre</a>
+    </div>
+    <div id="list_books" class="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:grid-cols-4 container mx-auto">
+        {% for book in list_books %}
+            <div class="flex flex-col items-center justify-center p-4 bg-gray-200 rounded my-6 relative pt-10" id="{{ book.isbn }}">
+                <div class="font-bold text-xl">{{ book.title }}</div>
+                <div class="italic text-sm">{{ book.author }}</div>
+                <div class="italic text-sm text-gray-500">ISBN: {{ book.isbn }}</div>
+                <div class="italic text-sm text-gray-500">Type: {{ book.book_type }}</div>
+                    {% if book.available %}
+                        <span class="bg-green-500 text-white text-sm absolute top-1 right-1 py-1 px-2 rounded">Disponible</span>
+                    {% else %}
+                        <span class="bg-red-500 text-white font-bold py-2 px-4 rounded">Indisponible</span>
+                    {% endif %}
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="reserve?isbn={{ book.isbn }}" class="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center w-full">Réserver</a>
+                    <button onClick="deleteBook('{{ book.isbn }}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center w-full">Supprimer</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        function deleteBook(isbn) {
+            fetch(`api/v1/books/${isbn}`, {method: "DELETE"})
+                .then(response => response.json())
+                .then(data => {
+                    const container_tmp = document.getElementById(isbn);
+                    console.log(container_tmp);
+                    if(container_tmp) {
+                        container_tmp.remove();
+                    }
+                });
+        }
+    </script>
+</main>
+</body>
+</html>

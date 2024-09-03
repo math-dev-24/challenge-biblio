@@ -1,0 +1,23 @@
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>Ma bibliothèque</title>
+    </head>
+    <body>
+        <h1 class="text-3xl font-bold text-center mt-4 mb-8">Ma bibliothèque</h1>
+    <div class="space-y-2">
+        <div class="bg-cyan-200 m-auto py-4 px-8 rounded w-1/3"><b class="text-cyan-700">i</b> Vous avez <b>{{ data.nb_books }}</b> livres dans votre bibliothèque</div>
+        <div class="bg-cyan-200 m-auto py-4 px-8 rounded w-1/3"><b class="text-cyan-700">i</b> Vous avez <b>{{ data.nb_available_books }}</b> livres disponibles</div>
+        <div class="text-center">
+            Vous pouvez ajouter un livre en cliquant sur le bouton <a href="/add" class="font-bold hover:underline">Ajouter un livre</a>.
+        </div>
+        <div class="text-center">
+            Vous pouvez consulter la liste des livres en cliquant sur le bouton <a href="/list" class="font-bold hover:underline">Liste les livres</a>.
+        </div>
+    </div>
+    </body>
+</html>

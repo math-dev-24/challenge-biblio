@@ -2,13 +2,18 @@
 
 ## Objectif
 Créer une application de gestion de livres.
+- CRUD livre
+- Statistiques
+- Réservation de livre
 
-## Développement
-- Créer un modèle de données
-- Créer une interface utilisateur
-- Créer une classe de gestion de la base de données
-- Créer une classe de gestion des utilisateurs
-- Créer une classe de gestion des livres
-- Créer une classe d'interface utilisateur
-- Créer une classe d'application
-- Tester l'application
+
+## Interface utilisateur
+
+### Page d'accueil
+![](asset/home.png)
+
+### Page d'ajout de livre
+![](asset/ajouter.png)
+
+### Liste des livres
+![](asset/list.png)

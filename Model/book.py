@@ -42,30 +42,30 @@ class Book(DbModel):
             'book_type': self.book_type
         }
 
-    def register(self):
+    def register(self) -> None:
         self.instance.table('book').insert(self.get_json)
 
-    def delete_book(self, isbn: str):
+    def delete_book(self, isbn: str) -> None:
         self.instance.table('book').remove(where('isbn') == isbn)
 
-    def get_all_books(self):
-        list_books: list[Book] = []
-        for book in self.instance.table('book').all():
-            list_books.append(Book(book['title'], book['author'], book['isbn'], book['book_type']))
-        return list_books
+    def get_all_books(self) -> list:
+        return self.instance.table('book').all()
 
-    def isbn_exist(self, isbn: str):
+    def isbn_exist(self, isbn: str) -> bool:
         tmp_book = self.instance.table('book').search(where('isbn') == isbn)
         return True if tmp_book else False
 
-    def get_book(self, isbn: str):
-        tmp_book = self.instance.table('book').search(where('isbn') == isbn)[0]
-        return Book(tmp_book['title'], tmp_book['author'], tmp_book['isbn'], tmp_book['book_type'])
+    def get_book(self, isbn: str) -> dict:
+        return self.instance.table('book').search(where('isbn') == isbn)[0]
 
-    @property
-    def get_available_book(self):
 
-        return ""
+    def get_available_book(self) -> list:
+        results = []
+        for book in self.get_all_books():
+            is_available: bool = MovementBook(book['isbn'], "2021-01-01", "2021-01-01").book_is_available()
+            if is_available:
+                results.append(book)
+        return results
 
     def __str__(self):
         return f"{self.title} by {self.author} - {self.isbn} - status : {self.available}"

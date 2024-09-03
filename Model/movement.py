@@ -1,4 +1,5 @@
 from Model.db import DbModel
+from tinydb import Query
 import datetime
 
 
@@ -9,19 +10,21 @@ class MovementBook(DbModel):
         self._date_start: datetime = date_start
         self._date_end: datetime = date_end
 
-    def get_all_movements(self):
+    def get_all_movements(self) -> list:
         return self.instance.table('movement').all()
 
-    def bookIsAvailable(self, isbn: str):
+    def book_is_available(self) -> bool:
         available: bool = True
-        tmp_book = self.instance.table('movement').where('isbn=?', isbn).get_all()
+        movement = Query()
+        tmp_book = self.instance.table('movement').search(movement.isbn == self._isbn)
         if tmp_book:
             for bk in tmp_book:
                 if bk['date_start'] <= self._date_start <= bk['date_end']:
                     available = False
+                    break
         return available
 
-    def register(self):
+    def register(self) -> None:
         self.instance.table('movement').insert({
             'isbn': self._isbn,
             'date_start': self._date_start,
@@ -29,15 +32,15 @@ class MovementBook(DbModel):
         })
 
     @property
-    def isbn(self):
+    def isbn(self) -> str:
         return self._isbn
 
     @property
-    def date_start(self):
+    def date_start(self) -> datetime:
         return self._date_start
 
     @property
-    def date_end(self):
+    def date_end(self) -> datetime:
         return self._date_end
 
     def __str__(self):
