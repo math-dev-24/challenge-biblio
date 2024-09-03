@@ -9,35 +9,33 @@
     <title>Ajouter un livre</title>
 </head>
 <body>
-<main>
-    <h1 class="text-3xl font-bold text-center mt-4 mb-8">Ajouter un livre</h1>
-    <div>
-        <form action="/api/v1/books" method="POST" class="border rounded shadow p-6 bg-white my-14 container mx-auto">
-        <div class="mb-4"><a href="/" class="italic hover:underline">Retour</a></div>
+<form action="/api/v1/books" method="POST" class="border rounded shadow p-6 bg-white my-14 container mx-auto"><h1
+        class="text-3xl font-bold text-center mb-4 uppercase">Ajouter un livre</h1>
+        <div class="mb-4"><a href="/" class="hover:underline text-cyan-700">Retour</a></div>
             {% if error %}
                 <div class="bg-red-500 text-white p-4 rounded my-4">{{ error }}</div>
             {% endif %}
             <div class="mb-4">
-                <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Titre du livre</label>
+                <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Titre du livre :</label>
                 <input type="text" id="title" name="title" placeholder="Titre du livre" required value="{{ book.title if book.title }}"
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
-                <label for="author" class="block text-gray-700 text-sm font-bold mb-2">Auteur du livre</label>
+                <label for="author" class="block text-gray-700 text-sm font-bold mb-2">Auteur du livre :</label>
                 <input type="text" id="author" name="author" placeholder="Auteur du livre" required value="{{ book.author if book.author }}"
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
-                <label for="isbn" class="block text-gray-700 text-sm font-bold mb-2">ISBN du livre</label>
+                <label for="isbn" class="block text-gray-700 text-sm font-bold mb-2">ISBN du livre :</label>
                 <input type="text" id="isbn" name="isbn" placeholder="ISBN du livre" required value="{{ book.isbn if book.isbn }}"
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
-                <label for="book_type" class="block text-gray-700 text-sm font-bold mb-2">Type de livre</label>
+                <label for="book_type" class="block text-gray-700 text-sm font-bold mb-2">Type de livre :</label>
                 <select id="book_type" name="book_type" required
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <option value="paper">Paperback</option>
-                    <option value="numeric">Numeric</option>
+                    <option value="paper">Papier</option>
+                    <option value="numeric">Numerique</option>
                 </select>
             </div>
             <div class="mb-4">
@@ -46,7 +44,5 @@
                 </button>
             </div>
         </form>
-    </div>
-</main>
 </body>
 </html>
