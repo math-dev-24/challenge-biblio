@@ -14,22 +14,22 @@
     <div>
         <form action="/api/v1/books" method="POST" class="border rounded shadow p-6 bg-white my-14 container mx-auto">
         <div class="mb-4"><a href="/" class="italic hover:underline">Retour</a></div>
-            {% if data.error %}
-                <div class="bg-red-500 text-white p-4 rounded my-4">{{ data.error }}</div>
+            {% if error %}
+                <div class="bg-red-500 text-white p-4 rounded my-4">{{ error }}</div>
             {% endif %}
             <div class="mb-4">
                 <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Titre du livre</label>
-                <input type="text" id="title" name="title" placeholder="Titre du livre" required value="{{ data.book.title }}"
+                <input type="text" id="title" name="title" placeholder="Titre du livre" required value="{{ book.title if book.title }}"
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
                 <label for="author" class="block text-gray-700 text-sm font-bold mb-2">Auteur du livre</label>
-                <input type="text" id="author" name="author" placeholder="Auteur du livre" required value="{{ data.book.author }}"
+                <input type="text" id="author" name="author" placeholder="Auteur du livre" required value="{{ book.author if book.author }}"
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
                 <label for="isbn" class="block text-gray-700 text-sm font-bold mb-2">ISBN du livre</label>
-                <input type="text" id="isbn" name="isbn" placeholder="ISBN du livre" required value="{{ data.book.isbn }}"
+                <input type="text" id="isbn" name="isbn" placeholder="ISBN du livre" required value="{{ book.isbn if book.isbn }}"
                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">

@@ -28,3 +28,14 @@ class BookController:
     def delete_book(self, isbn: str):
         self.book.delete_book(isbn)
         return True
+
+    def get_book(self, isbn: str):
+        tmp_book = self.book.get_book(isbn)
+        available_books = self.available_books()
+        if tmp_book not in available_books:
+            tmp_book['available'] = False
+        else:
+            tmp_book['available'] = True
+
+        return tmp_book
+

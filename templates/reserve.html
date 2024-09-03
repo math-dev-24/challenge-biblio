@@ -5,9 +5,67 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Reservé</title>
 </head>
 <body>
+<main>
+    <h1 class="text-3xl font-bold text-center mt-4 mb-8">Réservé</h1>
+    <div class="container mx-auto">
+        <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Accueil</a>
+        <a href="/add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ajouter un livre</a>
+    </div>
+    <div class="container mx-auto my-4 border rounded p-6 bg-white drop-shadow">
+        <a class="font-bold text-xl block hover:underline" href="/detail/{{ book.isbn }}">{{ book.title }}</a>
+        <div class="italic text-sm">{{ book.author }}</div>
+        <div class="italic text-sm text-gray-500">ISBN: {{ book.isbn }}</div>
+        <div class="italic text-sm text-gray-500">Type: {{ book.book_type }}</div>
+        <div class="flex flex-col space-y-2 my-2">
+            <label for="reservation_date_start">
+                <span class="text-gray-700 text-sm font-bold mb-2">Date de début :</span>
+                <input type="date" id="reservation_date_start" name="reservation_date_start" placeholder="Date de début" />
+            </label>
+            <label for="reservation_date_end">
+                <span class="text-gray-700 text-sm font-bold mb-2">Date de fin :</span>
+                <input type="date" id="reservation_date_end" name="reservation_date_end" placeholder="Date de fin" />
+            </label>
+        </div>
+        <button onClick="reserveBook('{{ book.isbn }}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Réserver</button>
+        <div>
+            <span id="error" class="hidden border p-4 rounded my-4 bg-red-100">Non disponible</span>
+            <span id="ok" class="hidden border p-4 rounded my-4 bg-green-100">Réservation effectuée</span>
+        </div>
+    </div>
+</main>
+<script>
+    function reserveBook(isbn) {
+        const reservation_date_start = new Date(document.getElementById("reservation_date_start").value);
+        const reservation_date_end = new Date(document.getElementById("reservation_date_end").value);
 
+        if(reservation_date_start > reservation_date_end) {
+            alert("La date de début doit être inférieure à la date de fin");
+            return;
+        }
+
+
+        fetch(`api/v1/books/${isbn}/reserve`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
+            "reservation_date_start": reservation_date_start.toISOString().split("T")[0],
+            "reservation_date_end": reservation_date_end.toISOString().split("T")[0]
+        })})
+            .then(response => response.json())
+            .then(data => {
+                const error = document.getElementById("error");
+                const ok = document.getElementById("ok");
+
+                if(data.result === "Non disponible") {
+                    error.style.display = "block";
+                    ok.style.display = "none";
+                } else {
+                    error.style.display = "none";
+                    ok.style.display = "block";
+                }
+            });
+    }
+</script>
 </body>
 </html>

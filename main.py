@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, redirect, render_template
 from Controller.BookController import BookController
+from Controller.MovementController import MovementController
 
 app = Flask(__name__)
 
@@ -16,16 +17,14 @@ def index():
 
 @app.route("/add", methods=["GET"])
 def add_book():
-    data = {
-        "error": request.args.get("error"),
-        "book": {
-            "title": request.args.get("title"),
-            "author": request.args.get("author"),
-            "isbn": request.args.get("isbn"),
-            "book_type": request.args.get("book_type")
-        }
+    error = request.args.get("error")
+    book = {
+        "title": request.args.get("title"),
+        "author": request.args.get("author"),
+        "isbn": request.args.get("isbn"),
+        "book_type": request.args.get("book_type")
     }
-    return render_template('add.html', data=data)
+    return render_template('add.html', error=error, book=book)
 
 
 @app.route("/list", methods=["GET"])
@@ -34,8 +33,21 @@ def list_books():
 
 
 @app.route("/reserve", methods=["GET"])
-def reserve_book():
-    return render_template('reserve.html')
+def view_reserve_book():
+    isbn = request.args.get("isbn")
+    if not isbn:
+        return redirect("/")
+
+    book = BookController().get_book(isbn)
+    return render_template('reserve.html', book=book)
+
+
+@app.route("/detail/<isbn>", methods=["GET"])
+def view_detail_book(isbn):
+    book = BookController().get_book(isbn)
+    controller_movement: MovementController = MovementController()
+    movements = controller_movement.get_movement_by_isbn(isbn)
+    return render_template('detail.html', book=book, movements=movements)
 
 
 @app.route('/api/v1/books', methods=["GET"])
@@ -53,11 +65,22 @@ def create_book():
     book_type = request.form['book_type']
 
     if not title or not author or not isbn or not book_type:
-        return redirect("/add?error=Données manquantes&title=" + title + "&author=" + author + "&isbn=" + isbn + "&book_type=" + book_type)
+        return redirect(
+            "/add?error=Données manquantes&title=" + title + "&author=" + author + "&isbn=" + isbn + "&book_type=" + book_type)
 
     controller_book.create_book(request.form['title'], request.form['author'], request.form['isbn'],
                                 request.form['book_type'])
     return redirect("/list")
+
+
+@app.route('/api/v1/books/<isbn>/reserve', methods=["POST"])
+def reserve_book(isbn):
+    data = request.json
+    movement_controller: MovementController = MovementController()
+    date_start = data.get('reservation_date_start')
+    date_end = data.get('reservation_date_end')
+    result: str = movement_controller.create_movement(isbn, date_start, date_end)
+    return jsonify({"result": result}), 200
 
 
 @app.route('/api/v1/books/<isbn>', methods=["DELETE"])

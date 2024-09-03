@@ -1,6 +1,6 @@
 from Model.db import DbModel
 from tinydb import Query
-import datetime
+from datetime import datetime
 
 
 class MovementBook(DbModel):
@@ -13,13 +13,21 @@ class MovementBook(DbModel):
     def get_all_movements(self) -> list:
         return self.instance.table('movement').all()
 
+    def get_all_movement_by_isbn(self, isbn: str) -> list:
+        return self.instance.table('movement').search(Query().isbn == isbn)
+
     def book_is_available(self) -> bool:
         available: bool = True
         movement = Query()
-        tmp_book = self.instance.table('movement').search(movement.isbn == self._isbn)
-        if tmp_book:
-            for bk in tmp_book:
-                if bk['date_start'] <= self._date_start <= bk['date_end']:
+        tmp_movements = self.instance.table('movement').search(movement.isbn == self._isbn)
+        if tmp_movements:
+            for movement in tmp_movements:
+
+                date_start = datetime.strptime(movement['date_start'], '%Y-%m-%d')
+                date_end = datetime.strptime(movement['date_end'], '%Y-%m-%d')
+                current_date = datetime.now()
+
+                if date_start <= current_date <= date_end:
                     available = False
                     break
         return available
@@ -27,8 +35,8 @@ class MovementBook(DbModel):
     def register(self) -> None:
         self.instance.table('movement').insert({
             'isbn': self._isbn,
-            'date_start': self._date_start,
-            'date_end': self._date_end
+            'date_start': self._date_start.isoformat().split('T')[0],
+            'date_end': self._date_end.isoformat().split('T')[0],
         })
 
     @property

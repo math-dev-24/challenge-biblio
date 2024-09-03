@@ -58,12 +58,23 @@ class Book(DbModel):
     def get_book(self, isbn: str) -> dict:
         return self.instance.table('book').search(where('isbn') == isbn)[0]
 
-
     def get_available_book(self) -> list:
         results = []
         for book in self.get_all_books():
-            is_available: bool = MovementBook(book['isbn'], "2021-01-01", "2021-01-01").book_is_available()
+            date_start = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
+            date_end = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
+            is_available: bool = MovementBook(book['isbn'], date_start, date_end).book_is_available()
             if is_available:
+                results.append(book)
+        return results
+
+    def get_not_available_book(self) -> list:
+        results = []
+        for book in self.get_all_books():
+            date_start = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
+            date_end = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
+            is_available: bool = MovementBook(book['isbn'], date_start, date_end).book_is_available()
+            if not is_available:
                 results.append(book)
         return results
 

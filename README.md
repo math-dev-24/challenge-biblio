@@ -17,3 +17,9 @@ Créer une application de gestion de livres.
 
 ### Liste des livres
 ![](asset/list.png)
+
+### details de livre
+![](asset/detail_book.png)
+
+### Réservation de livre
+![](asset/reserve.png)
