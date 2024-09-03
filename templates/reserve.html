@@ -12,6 +12,14 @@
         <div class="italic text-sm text-gray-500">ISBN: {{ book.isbn }}</div>
         <div class="italic text-sm text-gray-500">Type: {{ book.book_type }}</div>
         <div class="flex flex-col space-y-2 my-2">
+            <label>
+                <span class="text-gray-700 text-sm font-bold mb-2">Utilisateur :</span>
+                <select id="user" name="user">
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
             <label for="reservation_date_start">
                 <span class="text-gray-700 text-sm font-bold mb-2">Date de début :</span>
                 <input type="date" id="reservation_date_start" name="reservation_date_start" placeholder="Date de début" />
@@ -41,7 +49,8 @@
 
         fetch(`api/v1/books/${isbn}/reserve`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
             "reservation_date_start": reservation_date_start.toISOString().split("T")[0],
-            "reservation_date_end": reservation_date_end.toISOString().split("T")[0]
+            "reservation_date_end": reservation_date_end.toISOString().split("T")[0],
+                "user_id": document.getElementById("user").value
         })})
             .then(response => response.json())
             .then(data => {

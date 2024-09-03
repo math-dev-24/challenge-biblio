@@ -18,8 +18,8 @@ class Book(DbModel):
         self.book_table.insert(self.get_json)
 
     def delete_book(self, isbn: str) -> bool:
-        deleted_book: int = self.book_table.remove(where('isbn') == isbn)
-        return deleted_book > 0
+        deleted_book: list = self.book_table.remove(where('isbn') == isbn)
+        return len(deleted_book) > 0
 
     def get_all_books(self) -> list:
         return self.book_table.all()

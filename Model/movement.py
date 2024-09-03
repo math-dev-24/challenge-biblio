@@ -21,7 +21,7 @@ class MovementBook(DbModel):
     def book_is_available(self) -> bool:
         available: bool = True
         movement = Query()
-        tmp_movements = self.movement_table.search(movement.isbn == self.isbn)
+        tmp_movements = self.movement_table.search(movement.isbn == self._isbn)
         if tmp_movements:
             for movement in tmp_movements:
 
@@ -36,22 +36,10 @@ class MovementBook(DbModel):
 
     def register(self) -> None:
         self.movement_table.insert({
-            'isbn': self.isbn,
+            'isbn': self._isbn,
             'date_start': self._date_start.isoformat().split('T')[0],
             'date_end': self._date_end.isoformat().split('T')[0],
         })
 
-    @property
-    def isbn(self) -> str:
-        return self._isbn
-
-    @property
-    def date_start(self) -> datetime:
-        return self._date_start
-
-    @property
-    def date_end(self) -> datetime:
-        return self._date_end
-
-    def __str__(self):
-        return f"{self.isbn} - {self.date_start} - {self.date_end}"
+    def get_all_movement_by_user_id(self, user_id: int) -> list:
+        return self.movement_table.search(Query().id == user_id)

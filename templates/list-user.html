@@ -2,4 +2,39 @@
 
 {% block content %}
     <h1 class="text-3xl font-bold text-center mt-4 mb-8">Liste des utilisateurs</h1>
+    <div class="container mx-auto my-4">
+        <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Accueil</a>
+        <a href="/add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ajouter un livre</a>
+    </div>
+    <ul class="container mx-auto">
+        {% for user in list_user %}
+            <li class="flex flex-row items-center border rounded my-2 p-2" id="{{ user.id }}">
+                <div class="w-1/2 text-center">
+                    <p class="text-xl font-bold">{{user.id}} | {{ user.first_name }} {{ user.last_name }}</p>
+                    <p class="text-sm">{{ user.email }}</p>
+                    <span> {{ user.movements | length }} réservations</span>
+                </div>
+                <div class="w-1/2 text-center">
+                    <button onclick="deleteUser('{{ user.id }}')" class="text-sm text-red-500 hover:underline">Supprimer</button>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+<script>
+    function deleteUser(user_id) {
+        fetch(`/delete-user/${user_id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => response.json())
+            .then(data => {
+                const container_tmp = document.getElementById(user_id);
+                if(container_tmp) {
+                    container_tmp.remove();
+                }
+            })
+            .catch(error => console.log(error));
+    }
+</script>
 {% endblock %}
