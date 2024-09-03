@@ -1,14 +1,17 @@
 from Core.printer import Message
 from Controller.BookController import BookController
+from Controller.MovementController import MovementController
+
 LIST_COMMANDS: (str, ...) = (
     "Ajouter un livre", "Supprimer un livre", "Modifier un livre", "Emprunter un livre", "Retourner un livre",
     "Lister les livres", "Statistiques", "Quitter"
 )
 
 if __name__ == "__main__":
-    bookController = BookController()
+    bookController: BookController = BookController()
+    movementController: MovementController = MovementController()
 
-    Message.title("Ma bibliothèque")
+    Message.title("Ma bibliothèque !")
 
     while True:
         for i, command in enumerate(LIST_COMMANDS):
@@ -18,11 +21,11 @@ if __name__ == "__main__":
         action: str = Message.input()
 
         if action == "1":
-            bookController.create_book()
+            bookController.question_create_book()
         elif action == "2":
-            print("Supprimer un livre")
+            bookController.question_delete_book()
         elif action == "3":
-            print("Modifier un livre")
+            bookController.question_update_book()
         elif action == "4":
             print("Emprunter un livre")
         elif action == "5":
