@@ -7,11 +7,52 @@ from tinydb import where
 class Book(DbModel):
     def __init__(self, title: str, author: str, isbn: str, book_type: str):
         super().__init__()
+        self.book_table = self.instance.table('book')
         self._title: str = title
         self._author: str = author
         self._isbn: str = isbn
         self._book_type: str = book_type
         self._available: bool = True
+
+    def register(self) -> None:
+        self.book_table.insert(self.get_json)
+
+    def delete_book(self, isbn: str) -> bool:
+        deleted_book: int = self.book_table.remove(where('isbn') == isbn)
+        return deleted_book > 0
+
+    def get_all_books(self) -> list:
+        return self.book_table.all()
+
+    def isbn_exist(self, isbn: str) -> bool:
+        tmp_book = self.book_table.search(where('isbn') == isbn)
+        return True if tmp_book else False
+
+    def get_book(self, isbn: str) -> dict | None:
+        return self.book_table.search(where('isbn') == isbn)[0]
+
+    def get_available_book(self) -> list:
+        results = []
+        for book in self.get_all_books():
+            date_start = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
+            date_end = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
+            is_available: bool = MovementBook(book['isbn'], 1, date_start, date_end).book_is_available()
+            if is_available:
+                results.append(book)
+        return results
+
+    def get_not_available_book(self) -> list:
+        results = []
+        for book in self.get_all_books():
+            date_start = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
+            date_end = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
+            is_available: bool = MovementBook(book['isbn'], 1, date_start, date_end).book_is_available()
+            if not is_available:
+                results.append(book)
+        return results
+
+    def __str__(self):
+        return f"{self.title} by {self.author} - {self.isbn} - status : {self.available}"
 
     @property
     def title(self):
@@ -41,45 +82,6 @@ class Book(DbModel):
             'isbn': self.isbn,
             'book_type': self.book_type
         }
-
-    def register(self) -> None:
-        self.instance.table('book').insert(self.get_json)
-
-    def delete_book(self, isbn: str) -> None:
-        self.instance.table('book').remove(where('isbn') == isbn)
-
-    def get_all_books(self) -> list:
-        return self.instance.table('book').all()
-
-    def isbn_exist(self, isbn: str) -> bool:
-        tmp_book = self.instance.table('book').search(where('isbn') == isbn)
-        return True if tmp_book else False
-
-    def get_book(self, isbn: str) -> dict:
-        return self.instance.table('book').search(where('isbn') == isbn)[0]
-
-    def get_available_book(self) -> list:
-        results = []
-        for book in self.get_all_books():
-            date_start = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
-            date_end = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
-            is_available: bool = MovementBook(book['isbn'], date_start, date_end).book_is_available()
-            if is_available:
-                results.append(book)
-        return results
-
-    def get_not_available_book(self) -> list:
-        results = []
-        for book in self.get_all_books():
-            date_start = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
-            date_end = datetime.datetime.strptime("2021-01-01", '%Y-%m-%d')
-            is_available: bool = MovementBook(book['isbn'], date_start, date_end).book_is_available()
-            if not is_available:
-                results.append(book)
-        return results
-
-    def __str__(self):
-        return f"{self.title} by {self.author} - {self.isbn} - status : {self.available}"
 
 
 class PaperBook(Book):

@@ -32,6 +32,11 @@ def list_books():
     return render_template('list.html', list_books=BookController().get_all_books())
 
 
+@app.route("/list-user", methods=["GET"])
+def list_user():
+    return render_template('list-user.html')
+
+
 @app.route("/reserve", methods=["GET"])
 def view_reserve_book():
     isbn = request.args.get("isbn")

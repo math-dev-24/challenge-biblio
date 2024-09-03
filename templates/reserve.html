@@ -1,15 +1,6 @@
-<!doctype html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Reservé</title>
-</head>
-<body>
-<main>
+{% include 'base/page.html' %}
+
+{% block content %}
     <h1 class="text-3xl font-bold text-center mt-4 mb-8">Réservé</h1>
     <div class="container mx-auto">
         <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Accueil</a>
@@ -68,4 +59,5 @@
     }
 </script>
 </body>
-</html>
+
+{% endblock %}

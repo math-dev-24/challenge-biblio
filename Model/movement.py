@@ -4,22 +4,24 @@ from datetime import datetime
 
 
 class MovementBook(DbModel):
-    def __init__(self, isbn: str, date_start: datetime, date_end: datetime):
+    def __init__(self, isbn: str, user_id: int, date_start: datetime, date_end: datetime):
         super().__init__()
+        self.user_id: int = user_id
         self._isbn: str = isbn
+        self.movement_table = self.instance.table('movement')
         self._date_start: datetime = date_start
         self._date_end: datetime = date_end
 
     def get_all_movements(self) -> list:
-        return self.instance.table('movement').all()
+        return self.movement_table.all()
 
     def get_all_movement_by_isbn(self, isbn: str) -> list:
-        return self.instance.table('movement').search(Query().isbn == isbn)
+        return self.movement_table.search(Query().isbn == isbn)
 
     def book_is_available(self) -> bool:
         available: bool = True
         movement = Query()
-        tmp_movements = self.instance.table('movement').search(movement.isbn == self._isbn)
+        tmp_movements = self.movement_table.search(movement.isbn == self.isbn)
         if tmp_movements:
             for movement in tmp_movements:
 
@@ -33,8 +35,8 @@ class MovementBook(DbModel):
         return available
 
     def register(self) -> None:
-        self.instance.table('movement').insert({
-            'isbn': self._isbn,
+        self.movement_table.insert({
+            'isbn': self.isbn,
             'date_start': self._date_start.isoformat().split('T')[0],
             'date_end': self._date_end.isoformat().split('T')[0],
         })
