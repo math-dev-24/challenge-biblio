@@ -21,3 +21,18 @@ def test_book_properties(book):
     assert book.author == "John Doe"
     assert book.isbn == "1234443"
     assert book.book_type == "paper"
+
+
+def test_book_delete(book):
+    is_delete: bool = book.delete_book(book.isbn)
+    assert is_delete is True
+
+
+def test_isbn_exist(book):
+    is_exist: bool = book.isbn_exist(book.isbn)
+    assert is_exist is True
+
+
+def test_get_book(book):
+    book_get = book.get_book(book.isbn)
+    assert book_get['title'] == "Le livre de Bob"
