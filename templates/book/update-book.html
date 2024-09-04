@@ -1,0 +1,41 @@
+{% extends 'base/page.html' %}
+
+
+{% block content %}
+
+<form action="/api/v1/book/update" class="border rounded shadow p-6 bg-white my-14 container mx-auto flex flex-col gap-4"  method="GET">
+    <h1 class="text-3xl font-bold text-center mb-4 uppercase">Modifier un livre</h1>
+    {% if info %}
+    <div class="bg-slate-100 p-4 rounded my-4 border">{{ info }}</div>
+    {% endif %}
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="title">Titre du livre :</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title" name="title" placeholder="Titre du livre" required
+               type="text"
+               value="{{ title }}">
+    </div>
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="author">Auteur du livre :</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="author" name="author" placeholder="Auteur du livre" required
+               type="text"
+               value="{{ author }}">
+    </div>
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="isbn">ISBN du livre :</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="isbn" name="isbn" placeholder="ISBN du livre" required
+               type="text"
+               value="{{ isbn }}" readonly>
+    </div>
+    <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="book_type">Type de livre :</label>
+        <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="book_type" name="book_type"
+                required>
+            <option value="paper">Papier</option>
+            <option value="numeric">Numerique</option>
+        </select>
+    </div>
+        <button  class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out" type="submit">
+            Ajouter
+        </button>
+</form>
+{% endblock %}

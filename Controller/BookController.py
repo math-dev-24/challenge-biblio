@@ -57,3 +57,7 @@ class BookController:
             tmp_book['available'] = True
 
         return tmp_book
+
+    def update_book(self, isbn: str, title: str, author: str, book_type: str) -> bool:
+        is_updated: bool = self.book.update_book(isbn, title, author, book_type)
+        return is_updated

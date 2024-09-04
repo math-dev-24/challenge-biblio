@@ -2,12 +2,13 @@ from Model.book import Book
 from Model.movement import MovementBook
 from Model.user import User
 from datetime import datetime
+from math import ceil
 
 
 class MovementController:
     def __init__(self):
         self.book: Book = Book("Titre", "Auteur", "ISBN", "paper")
-        self.movement: MovementBook = MovementBook("ISBN", 1,"date", "date")
+        self.movement: MovementBook = MovementBook("ISBN", 1, "date", "date")
         self.user: User = User("<NAME>", "<NAME>", "<NAME>", "<NAME>")
 
     def get_all_movements(self):
@@ -22,7 +23,8 @@ class MovementController:
         for movement in list_movements:
             tmp_date_start = datetime.strptime(movement['date_start'], '%Y-%m-%d')
             tmp_date_end = datetime.strptime(movement['date_end'], '%Y-%m-%d')
-            if tmp_date_start <= date_start <= tmp_date_end or tmp_date_start <= date_end <= tmp_date_end or (tmp_date_start <= date_start and tmp_date_end >= date_end):
+            if tmp_date_start <= date_start <= tmp_date_end or tmp_date_start <= date_end <= tmp_date_end or (
+                    tmp_date_start <= date_start and tmp_date_end >= date_end):
                 return "Non disponible"
 
         tmp_movement = MovementBook(isbn, user_id, date_start, date_end)
@@ -52,3 +54,24 @@ class MovementController:
     def get_movements_in_today(self):
         today = datetime.today()
         return self.movement.get_all_movements_in_today(today)
+
+    def get_all_movements_page(self, page: int, per_page: int):
+        list_movements = self.get_all_movements()
+        available_movements = self.get_movements_in_today()
+        for movement in list_movements:
+            if movement not in available_movements:
+                movement['available'] = False
+            else:
+                movement['available'] = True
+            movement['book'] = self.book.get_book(movement['isbn'])
+            movement['user'] = self.user.get_user_by_id(movement['user_id'])
+
+        data = {
+            "page": page,
+            "per_page": per_page,
+            "nb_movements": len(list_movements),
+            "nb_pages": ceil(len(list_movements) / per_page),
+            "list_movements": list_movements[per_page * (page - 1): per_page * page]
+        }
+
+        return data

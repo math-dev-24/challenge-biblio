@@ -34,6 +34,10 @@ class Book(DbModel):
             return tmp_book[0]
         return tmp_book
 
+    def update_book(self, isbn: str, title: str, author: str, book_type: str) -> bool:
+        updated_book: list = self.book_table.update({'title': title, 'author': author, 'book_type': book_type}, where('isbn') == isbn)
+        return len(updated_book) > 0
+
     def get_available_book(self) -> list:
         results = []
         for book in self.get_all_books():

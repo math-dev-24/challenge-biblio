@@ -20,7 +20,7 @@ def index():
 
 
 @app.route("/add-book", methods=["GET"])
-def add_book():
+def view_add_book():
     error = request.args.get("error")
     book = {
         "title": request.args.get("title", type=str),
@@ -29,6 +29,16 @@ def add_book():
         "book_type": request.args.get("book_type", type=str)
     }
     return render_template('book/add-book.html', error=error, book=book)
+
+
+@app.route("/update-book", methods=["GET"])
+def view_update_book():
+    isbn = request.args.get("isbn", type=str)
+    title = request.args.get("title", type=str)
+    author = request.args.get("author", type=str)
+    book_type = request.args.get("book_type", type=str)
+    info = request.args.get("info", type=str) if request.args.get("info", type=str) else ""
+    return render_template('book/update-book.html', isbn=isbn, title=title, author=author, book_type=book_type, info=info)
 
 
 @app.route("/list-book", methods=["GET"])
@@ -46,8 +56,14 @@ def list_user():
 
 
 @app.route("/add-user", methods=["GET"])
-def add_user():
+def view_add_user():
     return render_template('user/add-user.html')
+
+@app.route("/list-movement", methods=["GET"])
+def view_list_movement():
+    page = request.args.get("page", 1, type=int)
+    per_page: int = 12
+    return render_template('list-movement.html', data=controller_movement.get_all_movements_page(page, per_page))
 
 
 @app.route("/detail-user/<user_id>", methods=["GET"])
@@ -73,9 +89,20 @@ def view_detail_book(isbn):
     return render_template('book/detail-book.html', book=book, movements=movements)
 
 
-@app.route('/api/v1/books', methods=["GET"])
+@app.route('/api/v1/book', methods=["GET"])
 def get_books():
     return jsonify(controller_book.get_all_books())
+
+
+@app.route('/api/v1/book/update', methods=["GET"])
+def update_book():
+    isbn = request.args.get("isbn", type=str)
+    title = request.args.get("title", type=str)
+    author = request.args.get("author", type=str)
+    book_type = request.args.get("book_type", type=str)
+    is_updated: bool = controller_book.update_book(isbn, title, author, book_type)
+    info: str = "Livre mis à jour" if is_updated else "Livre non mis à jour"
+    return redirect("/update-book?isbn=" + isbn + "&title=" + title + "&author=" + author + "&book_type=" + book_type + "&info=" + info)
 
 
 @app.route('/api/v1/book', methods=["POST"])
@@ -87,7 +114,8 @@ def create_book():
 
     isbn_exist = controller_book.get_book(isbn)
     if isbn_exist:
-        return redirect("/add?error=ISBN déjà utilisé&title=" + title + "&author=" + author + "&isbn=" + isbn + "&book_type=" + book_type)
+        return redirect(
+            "/add?error=ISBN déjà utilisé&title=" + title + "&author=" + author + "&isbn=" + isbn + "&book_type=" + book_type)
 
     if not title or not author or not isbn or not book_type:
         return redirect(
@@ -105,10 +133,12 @@ def create_user():
     email = request.form['email']
     existing_user = controller_user.get_user_by_email(email)
     if existing_user:
-        return redirect("/add?error=Email déjà utilisé&firstname=" + firstname + "&lastname=" + lastname + "&email=" + email)
+        return redirect(
+            "/add?error=Email déjà utilisé&firstname=" + firstname + "&lastname=" + lastname + "&email=" + email)
 
     if not password or not email or not firstname or not lastname:
-        return redirect("/add?error=Données manquantes&firstname=" + firstname + "&lastname=" + lastname + "&email=" + email)
+        return redirect(
+            "/add?error=Données manquantes&firstname=" + firstname + "&lastname=" + lastname + "&email=" + email)
 
     controller_user.create_user(firstname, lastname, password, email)
     return redirect("/list-user")
