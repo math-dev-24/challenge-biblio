@@ -1,0 +1,15 @@
+{% extends 'base/page.html' %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-center mt-4 mb-8">Utilisateur : {{ user.id }} | {{ user.first_name }} {{ user.last_name }}</h1>
+<div class="container mx-auto">
+    <ul>
+        {% for movement in movements %}
+            <li class="flex flex-col border rounded my-2 px-4 py-2">
+                <a href="/detail-book/{{ movement.book.isbn }}" class="text-xl font-bold hover:underline"> {{movement.book.title }} - N°{{ movement.book.isbn }}</a>
+                <p class="text-sm">{{ movement.date_start }} - {{ movement.date_end }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

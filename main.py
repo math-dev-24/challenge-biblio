@@ -19,7 +19,7 @@ def index():
     return render_template('index.html', data=data)
 
 
-@app.route("/add", methods=["GET"])
+@app.route("/add-book", methods=["GET"])
 def add_book():
     error = request.args.get("error")
     book = {
@@ -28,38 +28,49 @@ def add_book():
         "isbn": request.args.get("isbn"),
         "book_type": request.args.get("book_type")
     }
-    return render_template('add.html', error=error, book=book)
+    return render_template('book/add-book.html', error=error, book=book)
 
 
-@app.route("/list", methods=["GET"])
+@app.route("/list-book", methods=["GET"])
 def list_books():
-    return render_template('list.html', list_books=BookController().get_all_books())
+    return render_template('book/list-book.html', list_books=BookController().get_all_books())
 
 
 @app.route("/list-user", methods=["GET"])
 def list_user():
     users = controller_user.get_all_users()
     for user in users:
-        user['movements'] = MovementController().get_movement_by_user_id(user['id'])
+        user['movements'] = controller_movement.get_movements_by_user_id(str(user['id']))
 
-    return render_template('list-user.html', list_user=users)
+    return render_template('user/list-user.html', list_user=users)
 
 
-@app.route("/reserve", methods=["GET"])
-def view_reserve_book():
-    isbn = request.args.get("isbn")
+@app.route("/add-user", methods=["GET"])
+def add_user():
+    return render_template('user/add-user.html')
+
+
+@app.route("/detail-user/<user_id>", methods=["GET"])
+def view_detail_user(user_id):
+    user = controller_user.get_user_by_id(int(user_id))
+    movements = controller_movement.get_movements_by_user_id(user_id)
+    return render_template('user/detail-user.html', user=user, movements=movements)
+
+
+@app.route("/reserve-book/<isbn>", methods=["GET"])
+def view_reserve_book(isbn):
     if not isbn:
         return redirect("/")
     book = BookController().get_book(isbn)
     users = controller_user.get_all_users()
-    return render_template('reserve.html', book=book, users=users)
+    return render_template('book/reserve-book.html', book=book, users=users)
 
 
-@app.route("/detail/<isbn>", methods=["GET"])
+@app.route("/detail-book/<isbn>", methods=["GET"])
 def view_detail_book(isbn):
     book = BookController().get_book(isbn)
-    movements = controller_movement.get_movement_by_isbn(isbn)
-    return render_template('detail.html', book=book, movements=movements)
+    movements = controller_movement.get_movements_by_isbn(isbn)
+    return render_template('book/detail-book.html', book=book, movements=movements)
 
 
 @app.route('/api/v1/books', methods=["GET"])
@@ -67,22 +78,43 @@ def get_books():
     return jsonify(controller_book.get_all_books())
 
 
-@app.route('/api/v1/books', methods=["POST"])
+@app.route('/api/v1/book', methods=["POST"])
 def create_book():
     title = request.form['title']
     author = request.form['author']
     isbn = request.form['isbn']
     book_type = request.form['book_type']
 
+    isbn_exist = controller_book.get_book(isbn)
+    if isbn_exist:
+        return redirect("/add?error=ISBN déjà utilisé&title=" + title + "&author=" + author + "&isbn=" + isbn + "&book_type=" + book_type)
+
     if not title or not author or not isbn or not book_type:
         return redirect(
             "/add?error=Données manquantes&title=" + title + "&author=" + author + "&isbn=" + isbn + "&book_type=" + book_type)
 
     controller_book.create_book(title, author, isbn, book_type)
-    return redirect("/list")
+    return redirect("/list-book")
 
 
-@app.route('/api/v1/books/<isbn>/reserve', methods=["POST"])
+@app.route("/api/v1/user", methods=["POST"])
+def create_user():
+    firstname = request.form['firstname']
+    lastname = request.form['lastname']
+    password = request.form['password']
+    email = request.form['email']
+    existing_user = controller_user.get_user_by_email(email)
+    if existing_user:
+        return redirect("/add?error=Email déjà utilisé&firstname=" + firstname + "&lastname=" + lastname + "&email=" + email)
+
+    if not password or not email or not firstname or not lastname:
+        return redirect("/add?error=Données manquantes&firstname=" + firstname + "&lastname=" + lastname + "&email=" + email)
+
+    controller_user.create_user(firstname, lastname, password, email)
+    return redirect("/list-user")
+
+
+@app.route('/api/v1/book/<isbn>/reserve', methods=["POST"])
 def reserve_book(isbn):
     data = request.json
     date_start = data.get('reservation_date_start')
@@ -92,15 +124,17 @@ def reserve_book(isbn):
     return jsonify({"result": result}), 200
 
 
-@app.route('/api/v1/books/<isbn>', methods=["DELETE"])
+@app.route('/api/v1/book/<isbn>', methods=["DELETE"])
 def delete_book(isbn):
-    controller_book.delete_book(isbn)
+    is_deleted: bool = controller_book.delete_book(isbn)
+    if not is_deleted:
+        return jsonify({"error": "Impossible de supprimer le livre"}), 400
     return jsonify({"isbn": isbn}), 200
 
 
-@app.route('/delete-user/<user_id>', methods=["DELETE"])
+@app.route('/user/<user_id>', methods=["DELETE"])
 def delete_user(user_id):
-    is_deleted: bool = controller_user.delete_user(int(user_id))
+    is_deleted: bool = controller_user.delete_user(user_id)
     if not is_deleted:
         return jsonify({"error": "Impossible de supprimer l'utilisateur"}), 400
     return jsonify({"id": user_id}), 200

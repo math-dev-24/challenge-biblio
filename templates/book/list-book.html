@@ -1,18 +1,14 @@
 
-{% include 'base/page.html' %}
+{% extends 'base/page.html' %}
 
 {% block content %}
 
 <main>
     <h1 class="text-3xl font-bold text-center mt-4 mb-8">Liste des livres</h1>
-    <div class="container mx-auto">
-        <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Accueil</a>
-        <a href="/add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ajouter un livre</a>
-    </div>
     <div id="list_books" class="grid grid-cols-1 lg:gap-4 mt-6 gap-2 sm:grid-cols-3 lg:grid-cols-4 container mx-auto">
         {% for book in list_books %}
             <div class="flex flex-col items-center justify-center my-2 p-4 bg-gray-100 rounded relative pt-10 hover:drop-shadow-lg drop-shadow transition-all duration-300" id="{{ book.isbn }}">
-                <a href="/detail/{{ book.isbn }}" class="font-bold text-xl block hover:underline">{{ book.title }}</a>
+                <a href="/detail-book/{{ book.isbn }}" class="font-bold text-xl block hover:underline">{{ book.title }}</a>
                 <div class="italic text-sm">{{ book.author }}</div>
                 <div class="italic text-sm text-gray-500">ISBN: {{ book.isbn }}</div>
                 <div class="italic text-sm text-gray-500">Type: {{ book.book_type }}</div>
@@ -22,7 +18,7 @@
                         <span class="bg-red-500 text-white text-sm absolute top-1 right-1 py-1 px-2 rounded">Indisponible</span>
                     {% endif %}
                 <div class="grid grid-cols-2 gap-2 mt-1">
-                    <a href="reserve?isbn={{ book.isbn }}" class="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center w-full">Réserver</a>
+                    <a href="reserve-book/{{ book.isbn }}" class="block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center w-full">Réserver</a>
                     <button onClick="deleteBook('{{ book.isbn }}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-center w-full">Supprimer</button>
                 </div>
             </div>
@@ -31,7 +27,7 @@
 
     <script>
         function deleteBook(isbn) {
-            fetch(`api/v1/books/${isbn}`, {method: "DELETE"})
+            fetch(`api/v1/book/${isbn}`, {method: "DELETE"})
                 .then(response => response.json())
                 .then(data => {
                     const container_tmp = document.getElementById(isbn);

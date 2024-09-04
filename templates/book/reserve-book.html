@@ -1,17 +1,17 @@
-{% include 'base/page.html' %}
+{% extends 'base/page.html' %}
 
 {% block content %}
-    <h1 class="text-3xl font-bold text-center mt-4 mb-8">Réservé</h1>
-    <div class="container mx-auto">
-        <a href="/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Accueil</a>
-        <a href="/add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Ajouter un livre</a>
-    </div>
     <div class="container mx-auto my-4 border rounded p-6 bg-white drop-shadow">
-        <a class="font-bold text-xl block hover:underline" href="/detail/{{ book.isbn }}">{{ book.title }}</a>
-        <div class="italic text-sm">{{ book.author }}</div>
-        <div class="italic text-sm text-gray-500">ISBN: {{ book.isbn }}</div>
-        <div class="italic text-sm text-gray-500">Type: {{ book.book_type }}</div>
-        <div class="flex flex-col space-y-2 my-2">
+        <h1 class="text-3xl font-bold text-center mt-4 mb-8">Réservé</h1>
+        <div class="p-2 mx-2 border rounded">
+            <p class="font-bold text-2xl block mb-2">Informations sur le livre :</p>
+            <a class="font-bold text-xl block hover:underline" href="/detail-book/{{ book.isbn }}">{{ book.title }}</a>
+            <div class="italic text-sm">{{ book.author }}</div>
+            <div class="italic text-sm text-gray-500">ISBN: {{ book.isbn }}</div>
+            <div class="italic text-sm text-gray-500">Type: {{ book.book_type }}</div>
+        </div>
+        <div class="h-0.5 w-full bg-gray-300 my-2"></div>
+        <div class="flex flex-col space-y-4 my-2">
             <label>
                 <span class="text-gray-700 text-sm font-bold mb-2">Utilisateur :</span>
                 <select id="user" name="user">
@@ -41,13 +41,12 @@
         const reservation_date_start = new Date(document.getElementById("reservation_date_start").value);
         const reservation_date_end = new Date(document.getElementById("reservation_date_end").value);
 
-        if(reservation_date_start > reservation_date_end) {
+        if(reservation_date_start > reservation_date_end || reservation_date_start == reservation_date_end) {
             alert("La date de début doit être inférieure à la date de fin");
             return;
         }
 
-
-        fetch(`api/v1/books/${isbn}/reserve`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
+        fetch(`api/v1/book/${isbn}/reserve`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
             "reservation_date_start": reservation_date_start.toISOString().split("T")[0],
             "reservation_date_end": reservation_date_end.toISOString().split("T")[0],
                 "user_id": document.getElementById("user").value

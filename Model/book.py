@@ -15,7 +15,7 @@ class Book(DbModel):
         self._available: bool = True
 
     def register(self) -> None:
-        self.book_table.insert(self.get_json)
+        return self.book_table.insert(self.get_json)
 
     def delete_book(self, isbn: str) -> bool:
         deleted_book: list = self.book_table.remove(where('isbn') == isbn)
@@ -26,10 +26,13 @@ class Book(DbModel):
 
     def isbn_exist(self, isbn: str) -> bool:
         tmp_book = self.book_table.search(where('isbn') == isbn)
-        return True if tmp_book else False
+        return len(tmp_book) > 0
 
     def get_book(self, isbn: str) -> dict | None:
-        return self.book_table.search(where('isbn') == isbn)[0]
+        tmp_book = self.book_table.search(where('isbn') == isbn)
+        if tmp_book:
+            return tmp_book[0]
+        return tmp_book
 
     def get_available_book(self) -> list:
         results = []

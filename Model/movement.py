@@ -1,5 +1,5 @@
 from Model.db import DbModel
-from tinydb import Query
+from tinydb import Query, where
 from datetime import datetime
 
 
@@ -36,10 +36,22 @@ class MovementBook(DbModel):
 
     def register(self) -> None:
         self.movement_table.insert({
+            "user_id": self.user_id,
             'isbn': self._isbn,
             'date_start': self._date_start.isoformat().split('T')[0],
             'date_end': self._date_end.isoformat().split('T')[0],
         })
 
-    def get_all_movement_by_user_id(self, user_id: int) -> list:
-        return self.movement_table.search(Query().id == user_id)
+    def get_all_movement_by_user_id(self, user_id: str) -> list:
+        return self.movement_table.search(Query().user_id == user_id)
+
+    def get_all_movements_in_today(self, today: datetime) -> list:
+        return self.movement_table.search(Query().date_start <= today.isoformat().split('T')[0] <= Query().date_end)
+
+    def delete_movement_by_isbn(self, isbn: str) -> bool:
+        deleted_movement: list = self.movement_table.remove(where('isbn') == isbn)
+        return len(deleted_movement) > 0
+
+    def delete_movement_by_user_id(self, user_id: str) -> bool:
+        deleted_movement: list = self.movement_table.remove(where('user_id') == user_id)
+        return len(deleted_movement) > 0

@@ -1,4 +1,4 @@
-{% include 'base/page.html' %}
+{% extends 'base/page.html' %}
 
 {% block content %}
 
@@ -12,21 +12,19 @@
             <span class="bg-red-500 text-white text-sm py-1 px-2 rounded absolute scale-90 top-0 left-1">Indisponible</span>
         {% endif %}
     </h1>
-
-    <a href="/list" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Retour à la liste des livres</a>
-    <a href="/reserve?isbn={{ book.isbn }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Réserver</a>
-    <div class="border rounded p-4 bg-white drop-shadow my-8">
+    <div class="border rounded p-4 bg-white drop-shadow my-8 flex flex-col gap-4">
         <div class="flex flex-col space-y-2">
             <span class="italic">{{ book.author }}</span>
             <span class="italic text-sm text-gray-500">ISBN: {{ book.isbn }}</span>
             <span class="italic text-sm text-gray-500">Type: {{ book.book_type }}</span>
         </div>
+        <a href="/reserve-book/{{ book.isbn }}" class="text-cyan-600 font-bold hover:underline">Réserver</a>
         <ul>
             {% if movements %}
-            <li class="font-bold text-xl mt-4 mb-2">Réservations</li>
+            <li class="font-bold text-xl mt-4 mb-2">Historique des réservations</li>
             {% endif %}
             {% for movement in movements %}
-                <li>Start: {{ movement.date_start }} - End: {{ movement.date_end }}</li>
+                <li>Start: {{ movement.date_start }} - End: {{ movement.date_end }} par {{ movement.user.first_name }} {{ movement.user.last_name }}</li>
             {% endfor %}
         </ul>
     </div>

@@ -1,11 +1,10 @@
-{% include 'base/page.html' %}
+{% extends 'base/page.html' %}
 
 
 {% block content %}
 
-<form action="/api/v1/books" class="border rounded shadow p-6 bg-white my-14 container mx-auto" method="POST"><h1
-        class="text-3xl font-bold text-center mb-4 uppercase">Ajouter un livre</h1>
-    <div class="mb-4"><a class="hover:underline text-cyan-700" href="/">Retour</a></div>
+<form action="/api/v1/book" class="border rounded shadow p-6 bg-white my-14 container mx-auto flex flex-col gap-4"  method="POST">
+    <h1 class="text-3xl font-bold text-center mb-4 uppercase">Ajouter un livre</h1>
     {% if error %}
     <div class="bg-red-500 text-white p-4 rounded my-4">{{ error }}</div>
     {% endif %}
@@ -35,10 +34,8 @@
             <option value="numeric">Numerique</option>
         </select>
     </div>
-    <div class="mb-4">
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">
+        <button  class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out" type="submit">
             Ajouter
         </button>
-    </div>
 </form>
 {% endblock %}
