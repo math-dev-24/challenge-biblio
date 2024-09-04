@@ -47,3 +47,16 @@ class User(DbModel):
 
     def get_user_by_email(self, email: str) -> list:
         return self.user_table.search(where('email') == email)
+
+    def update_user(self, user_id: int, first_name: str, last_name: str, email: str) -> bool:
+        user = self.get_user_by_id(int(user_id))
+        password = user[0]['password']
+
+        tmp_user = {
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'password': password
+        }
+        updated_user: list = self.user_table.update(tmp_user, where('id') == int(user_id))
+        return len(updated_user) > 0

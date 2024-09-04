@@ -34,7 +34,7 @@ class UserController:
         is_deleted: bool = self.user.delete_user(user_id)
         is_deleted_mov: bool = False
         if is_deleted:
-            is_deleted_mov = self.movement.delete_movement_by_user_id(user_id)
+            is_deleted_mov = self.movement.delete_movement_by_user_id(int(user_id))
         return is_deleted and is_deleted_mov
 
     def get_user_by_id(self, user_id: int):
@@ -42,3 +42,7 @@ class UserController:
 
     def get_user_by_email(self, email: str):
         return self.user.get_user_by_email(email)[0]
+
+    def update_user(self, user_id: int, first_name: str, last_name: str, email: str):
+        is_updated: bool = self.user.update_user(user_id, first_name, last_name, email)
+        return is_updated

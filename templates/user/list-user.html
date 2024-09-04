@@ -2,34 +2,67 @@
 
 {% block content %}
 <h1 class="text-3xl font-bold text-center mt-4 mb-8">Liste des utilisateurs</h1>
-    <div class="flex w-full border rounded drop-shadow bg-white p-4 mb-4 gap-2 items-center justify-center">
-        {% if data.page > 1 %}
-            <a href="/list-user?page=1" class="mr-2 text-blue-500 hover:underline"> << </a>
-            <a href="/list-user?page={{ data.page - 1 }}" class="mr-2 text-blue-500 hover:underline"> < </a>
-        {% endif %}
-        <span>{{ data.page }} / {{ data.nb_pages }}</span>
-        {% if data.page < data.nb_pages %}
-            <a href="/list-user?page={{ data.page + 1 }}" class="ml-2 text-blue-500 hover:underline"> ></a>
-        <a href="/list-user?page= {{ data.nb_pages }}" class="ml-2 text-blue-500 hover:underline"> >> </a>
-        {% endif %}
-    </div>
-    <ul class="container mx-auto grid grid-cols-3 gap-2">
-        {% for user in data.list_users %}
-            <li class="flex flex-row items-center border rounded my-2 p-2" id="{{ user.id }}">
-                <div class="w-1/2 text-center">
-                    <a href="/detail-user/{{ user.id }}" class="text-xl font-bold hover:underline">{{user.id}} | {{ user.first_name }} {{ user.last_name }}</a>
-                    <p class="text-sm">{{ user.email }}</p>
-                    <span> {{ user.movements | length }} réservations</span>
-                </div>
-                <div class="w-1/2 text-center">
-                    <button onclick="deleteUser('{{ user.id }}')" class="text-sm text-red-500 hover:underline">Supprimer</button>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+<div class="flex w-full border rounded drop-shadow bg-white p-4 mb-4 gap-2 items-center justify-center">
+    {% if data.page > 1 %}
+    <a class="mr-2 text-blue-500 hover:underline" href="/list-user?page=1"> << </a>
+    <a class="mr-2 text-blue-500 hover:underline" href="/list-user?page={{ data.page - 1 }}"> < </a>
+    {% endif %}
+    <span>{{ data.page }} / {{ data.nb_pages }}</span>
+    {% if data.page < data.nb_pages %}
+    <a class="ml-2 text-blue-500 hover:underline" href="/list-user?page={{ data.page + 1 }}"> ></a>
+    <a class="ml-2 text-blue-500 hover:underline" href="/list-user?page= {{ data.nb_pages }}"> >> </a>
+    {% endif %}
+</div>
+<table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+    <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+            ID
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+            Prénom
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+            Nom
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+            Email
+        </th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+            Actions
+        </th>
+    </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+    {% for user in data.list_users %}
+    <tr id="{{ user.id }}">
+        <td class="px-6 py-4 whitespace-nowrap">
+            {{ user.id }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            {{ user.first_name }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            {{ user.last_name }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            {{ user.email }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <a class="block text-gray-500 hover:text-gray-800 cursor-pointer" href="/update-user?user_id={{ user.id }}&first_name={{ user.first_name }}&last_name={{ user.last_name }}&email={{ user.email }}">
+                Modifier
+            </a>
+            <div class="text-red-500 hover:text-red-800 cursor-pointer" onclick="deleteUser('{{ user.id }}')">
+                Supprimer
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 <script>
     function deleteUser(user_id) {
-        fetch(`/delete-user/${user_id}`, {
+        fetch(`/user/${user_id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -37,7 +70,7 @@
         }).then(response => response.json())
             .then(data => {
                 const container_tmp = document.getElementById(user_id);
-                if(container_tmp) {
+                if (container_tmp) {
                     container_tmp.remove();
                 }
             })

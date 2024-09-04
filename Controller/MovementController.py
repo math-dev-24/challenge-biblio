@@ -36,16 +36,15 @@ class MovementController:
         if tmp_movement:
             for movement in tmp_movement:
                 user_id: int = int(movement['user_id'])
-                user = self.user.get_user_by_id(user_id)
+                user = self.user.get_user_by_id(user_id)[0]
                 movement['user'] = user
-                print(movement)
         return tmp_movement
 
     def get_movements_by_user_id(self, user_id: str):
         tmp_movements = self.movement.get_all_movements_by_user_id(user_id)
         for movement in tmp_movements:
             user_id: int = int(movement['user_id'])
-            user = self.user.get_user_by_id(user_id)
+            user = self.user.get_user_by_id(user_id)[0]
             movement['user'] = user
             isbn = movement['isbn']
             movement['book'] = self.book.get_book(isbn)
@@ -64,7 +63,7 @@ class MovementController:
             else:
                 movement['available'] = True
             movement['book'] = self.book.get_book(movement['isbn'])
-            movement['user'] = self.user.get_user_by_id(movement['user_id'])
+            movement['user'] = self.user.get_user_by_id(int(movement['user_id']))[0]
 
         data = {
             "page": page,
@@ -75,3 +74,6 @@ class MovementController:
         }
 
         return data
+
+    def delete_movements(self, movement_id: str, isbn: str):
+        return self.movement.delete_movements(movement_id, isbn)
