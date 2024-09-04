@@ -25,7 +25,8 @@ class BookController:
     @staticmethod
     def create_book(title: str, author: str, isbn: str, book_type: str):
         tmp_book: Book = Book(title, author, isbn, book_type)
-        tmp_book.register()
+        is_registered: bool = tmp_book.register() > 0
+        return is_registered
 
     def delete_book(self, isbn: str) -> bool:
         is_deleted: bool = self.book.delete_book(isbn)

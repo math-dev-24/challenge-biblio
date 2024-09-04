@@ -14,7 +14,7 @@ class Book(DbModel):
         self._book_type: str = book_type
         self._available: bool = True
 
-    def register(self) -> None:
+    def register(self) -> int:
         return self.book_table.insert(self.get_json)
 
     def delete_book(self, isbn: str) -> bool:
