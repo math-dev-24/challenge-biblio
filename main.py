@@ -23,17 +23,19 @@ def index():
 def add_book():
     error = request.args.get("error")
     book = {
-        "title": request.args.get("title"),
-        "author": request.args.get("author"),
-        "isbn": request.args.get("isbn"),
-        "book_type": request.args.get("book_type")
+        "title": request.args.get("title", type=str),
+        "author": request.args.get("author", type=str),
+        "isbn": request.args.get("isbn", type=str),
+        "book_type": request.args.get("book_type", type=str)
     }
     return render_template('book/add-book.html', error=error, book=book)
 
 
 @app.route("/list-book", methods=["GET"])
 def list_books():
-    return render_template('book/list-book.html', list_books=BookController().get_all_books())
+    page = request.args.get("page", 1, type=int)
+    per_page: int = 8
+    return render_template('book/list-book.html', data=BookController().get_all_books(page, per_page))
 
 
 @app.route("/list-user", methods=["GET"])

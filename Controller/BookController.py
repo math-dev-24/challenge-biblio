@@ -1,5 +1,6 @@
 from Model.book import Book
 from Model.movement import MovementBook
+from math import ceil
 
 
 class BookController:
@@ -7,7 +8,7 @@ class BookController:
         self.book: Book = Book("Titre", "Auteur", "ISBN", "paper")
         self.movement: MovementBook = MovementBook("ISBN", 1, "date", "date")
 
-    def get_all_books(self):
+    def get_all_books(self, page: int, per_page: int):
         list_books = self.book.get_all_books()
         available_books = self.available_books()
         for book in list_books:
@@ -16,8 +17,14 @@ class BookController:
             else:
                 book['available'] = True
 
-        list_books.sort(key=lambda x: x['available'], reverse=True)
-        return list_books
+        data = {
+            "page": page,
+            "per_page": per_page,
+            "nb_pages": ceil(len(list_books) / per_page),
+            "list_books": list_books[per_page * (page - 1): per_page * page]
+        }
+
+        return data
 
     def available_books(self) -> list:
         return self.book.get_available_book()

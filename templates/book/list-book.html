@@ -5,8 +5,17 @@
 
 <main>
     <h1 class="text-3xl font-bold text-center mt-4 mb-8">Liste des livres</h1>
+    <div class="flex w-full border rounded drop-shadow bg-white p-4 mb-4">
+        {% if data.page > 1 %}
+            <a href="/list-book?page={{ data.page - 1 }}" class="mr-2 text-blue-500 hover:underline">Précédent</a>
+        {% endif %}
+        <span>{{ data.page }} / {{ data.nb_pages }}</span>
+        {% if data.page < data.nb_pages %}
+            <a href="/list-book?page={{ data.page + 1 }}" class="ml-2 text-blue-500 hover:underline">Suivant</a>
+        {% endif %}
+    </div>
     <div id="list_books" class="grid grid-cols-1 lg:gap-4 mt-6 gap-2 sm:grid-cols-3 lg:grid-cols-4 container mx-auto">
-        {% for book in list_books %}
+        {% for book in data.list_books %}
             <div class="flex flex-col items-center justify-center my-2 p-4 bg-gray-100 rounded relative pt-10 hover:drop-shadow-lg drop-shadow transition-all duration-300" id="{{ book.isbn }}">
                 <a href="/detail-book/{{ book.isbn }}" class="font-bold text-xl block hover:underline">{{ book.title }}</a>
                 <div class="italic text-sm">{{ book.author }}</div>
