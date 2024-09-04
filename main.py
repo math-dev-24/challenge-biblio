@@ -40,11 +40,9 @@ def list_books():
 
 @app.route("/list-user", methods=["GET"])
 def list_user():
-    users = controller_user.get_all_users()
-    for user in users:
-        user['movements'] = controller_movement.get_movements_by_user_id(str(user['id']))
-
-    return render_template('user/list-user.html', list_user=users)
+    page = request.args.get("page", 1, type=int)
+    per_page: int = 12
+    return render_template('user/list-user.html', data=UserController().get_all_users(page, per_page))
 
 
 @app.route("/add-user", methods=["GET"])

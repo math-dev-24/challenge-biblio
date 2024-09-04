@@ -1,6 +1,6 @@
 from Model.user import User
 from Model.movement import MovementBook
-
+from math import ceil
 
 class UserController:
     def __init__(self):
@@ -13,8 +13,18 @@ class UserController:
         user.save()
         return user
 
-    def get_all_users(self):
-        return self.user.get_all_users()
+    def get_all_users(self, page: int, per_page: int):
+        users = self.user.get_all_users()
+        for user in users:
+            user['movements'] = self.movement.get_all_movements_by_user_id(str(user['id']))
+
+        data = {
+            "page": page,
+            "per_page": per_page,
+            "nb_pages": ceil(len(users) / per_page),
+            "list_users": users[per_page * (page - 1): per_page * page]
+        }
+        return data
 
     def delete_user(self, user_id: str):
         is_deleted: bool = self.user.delete_user(user_id)

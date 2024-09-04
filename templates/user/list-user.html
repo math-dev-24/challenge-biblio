@@ -2,8 +2,19 @@
 
 {% block content %}
 <h1 class="text-3xl font-bold text-center mt-4 mb-8">Liste des utilisateurs</h1>
+    <div class="flex w-full border rounded drop-shadow bg-white p-4 mb-4 gap-2 items-center justify-center">
+        {% if data.page > 1 %}
+            <a href="/list-user?page=1" class="mr-2 text-blue-500 hover:underline"> << </a>
+            <a href="/list-user?page={{ data.page - 1 }}" class="mr-2 text-blue-500 hover:underline"> < </a>
+        {% endif %}
+        <span>{{ data.page }} / {{ data.nb_pages }}</span>
+        {% if data.page < data.nb_pages %}
+            <a href="/list-user?page={{ data.page + 1 }}" class="ml-2 text-blue-500 hover:underline"> ></a>
+        <a href="/list-user?page= {{ data.nb_pages }}" class="ml-2 text-blue-500 hover:underline"> >> </a>
+        {% endif %}
+    </div>
     <ul class="container mx-auto grid grid-cols-3 gap-2">
-        {% for user in list_user %}
+        {% for user in data.list_users %}
             <li class="flex flex-row items-center border rounded my-2 p-2" id="{{ user.id }}">
                 <div class="w-1/2 text-center">
                     <a href="/detail-user/{{ user.id }}" class="text-xl font-bold hover:underline">{{user.id}} | {{ user.first_name }} {{ user.last_name }}</a>

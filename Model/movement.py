@@ -42,7 +42,7 @@ class MovementBook(DbModel):
             'date_end': self._date_end.isoformat().split('T')[0],
         })
 
-    def get_all_movement_by_user_id(self, user_id: str) -> list:
+    def get_all_movements_by_user_id(self, user_id: str) -> list:
         return self.movement_table.search(Query().user_id == user_id)
 
     def get_all_movements_in_today(self, today: datetime) -> list:
