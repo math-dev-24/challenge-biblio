@@ -35,14 +35,14 @@ def add_book():
 def list_books():
     page = request.args.get("page", 1, type=int)
     per_page: int = 8
-    return render_template('book/list-book.html', data=BookController().get_all_books(page, per_page))
+    return render_template('book/list-book.html', data=BookController().get_all_books_page(page, per_page))
 
 
 @app.route("/list-user", methods=["GET"])
 def list_user():
     page = request.args.get("page", 1, type=int)
     per_page: int = 12
-    return render_template('user/list-user.html', data=UserController().get_all_users(page, per_page))
+    return render_template('user/list-user.html', data=UserController().get_all_users_page(page, per_page))
 
 
 @app.route("/add-user", methods=["GET"])

@@ -40,7 +40,7 @@ class MovementController:
         return tmp_movement
 
     def get_movements_by_user_id(self, user_id: str):
-        tmp_movements = self.movement.get_all_movement_by_user_id(user_id)
+        tmp_movements = self.movement.get_all_movements_by_user_id(user_id)
         for movement in tmp_movements:
             user_id: int = int(movement['user_id'])
             user = self.user.get_user_by_id(user_id)

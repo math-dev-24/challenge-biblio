@@ -13,14 +13,18 @@ class UserController:
         user.save()
         return user
 
-    def get_all_users(self, page: int, per_page: int):
-        users = self.user.get_all_users()
+    def get_all_users(self) -> list:
+        return self.user.get_all_users()
+
+    def get_all_users_page(self, page: int, per_page: int):
+        users = self.get_all_users()
         for user in users:
             user['movements'] = self.movement.get_all_movements_by_user_id(str(user['id']))
 
         data = {
             "page": page,
             "per_page": per_page,
+            "nb_users": len(users),
             "nb_pages": ceil(len(users) / per_page),
             "list_users": users[per_page * (page - 1): per_page * page]
         }

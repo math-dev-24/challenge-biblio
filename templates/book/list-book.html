@@ -5,13 +5,15 @@
 
 <main>
     <h1 class="text-3xl font-bold text-center mt-4 mb-8">Liste des livres</h1>
-    <div class="flex w-full border rounded drop-shadow bg-white p-4 mb-4">
+    <div class="flex w-full border rounded drop-shadow bg-white p-4 mb-4 gap-2 items-center justify-center">
         {% if data.page > 1 %}
-            <a href="/list-book?page={{ data.page - 1 }}" class="mr-2 text-blue-500 hover:underline">Précédent</a>
+            <a href="/list-book?page=1" class="mr-2 text-blue-500 hover:underline"> << </a>
+            <a href="/list-book?page={{ data.page - 1 }}" class="mr-2 text-blue-500 hover:underline"> < </a>
         {% endif %}
         <span>{{ data.page }} / {{ data.nb_pages }}</span>
         {% if data.page < data.nb_pages %}
-            <a href="/list-book?page={{ data.page + 1 }}" class="ml-2 text-blue-500 hover:underline">Suivant</a>
+            <a href="/list-book?page={{ data.page + 1 }}" class="ml-2 text-blue-500 hover:underline"> > </a>
+            <a href="/list-book?page= {{ data.nb_pages }}" class="ml-2 text-blue-500 hover:underline"> >> </a>
         {% endif %}
     </div>
     <div id="list_books" class="grid grid-cols-1 lg:gap-4 mt-6 gap-2 sm:grid-cols-3 lg:grid-cols-4 container mx-auto">

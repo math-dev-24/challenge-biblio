@@ -8,8 +8,11 @@ class BookController:
         self.book: Book = Book("Titre", "Auteur", "ISBN", "paper")
         self.movement: MovementBook = MovementBook("ISBN", 1, "date", "date")
 
-    def get_all_books(self, page: int, per_page: int):
-        list_books = self.book.get_all_books()
+    def get_all_books(self) -> list:
+        return self.book.get_all_books()
+
+    def get_all_books_page(self, page: int, per_page: int):
+        list_books = self.get_all_books()
         available_books = self.available_books()
         for book in list_books:
             if book not in available_books:
@@ -20,6 +23,7 @@ class BookController:
         data = {
             "page": page,
             "per_page": per_page,
+            "nb_books": len(list_books),
             "nb_pages": ceil(len(list_books) / per_page),
             "list_books": list_books[per_page * (page - 1): per_page * page]
         }
