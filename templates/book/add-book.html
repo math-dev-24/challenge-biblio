@@ -9,25 +9,25 @@
     <div class="bg-red-500 text-white p-4 rounded my-4">{{ error }}</div>
     {% endif %}
     <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="title">Titre du livre :</label>
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="title">Titre du livre : <span class="text-red-500">*</span></label>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title" name="title" placeholder="Titre du livre" required
                type="text"
                value="{{ book.title if book.title }}">
     </div>
     <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="author">Auteur du livre :</label>
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="author">Auteur du livre : <span class="text-red-500">*</span></label>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="author" name="author" placeholder="Auteur du livre" required
                type="text"
                value="{{ book.author if book.author }}">
     </div>
     <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="isbn">ISBN du livre :</label>
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="isbn">ISBN du livre : <span class="text-red-500">*</span></label>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="isbn" name="isbn" placeholder="ISBN du livre" required
                type="text"
                value="{{ book.isbn if book.isbn }}">
     </div>
     <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="book_type">Type de livre :</label>
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="book_type">Type de livre : <span class="text-red-500">*</span></label>
         <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="book_type" name="book_type"
                 required>
             <option value="paper">Papier</option>

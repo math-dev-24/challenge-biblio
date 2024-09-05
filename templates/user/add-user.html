@@ -6,23 +6,23 @@
 <h1 class="text-3xl font-bold text-center mb-4 uppercase">Ajouter un utilisateur</h1>
     <div class="flex gap-2">
             <label class="block text-gray-700 text-sm font-bold mb-2 flex-1" for="firstname">
-        <span>Prénom : </span>
+        <span>Prénom : <span class="text-red-500">*</span></span>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="firstname" name="firstname" placeholder="Nom d'utilisateur" required
            type="text">
     </label>
             <label class="block text-gray-700 text-sm font-bold mb-2 flex-1" for="lastname">
-        <span>Nom : </span>
+        <span>Nom : <span class="text-red-500">*</span></span>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="lastname" name="lastname" placeholder="Nom d'utilisateur" required
            type="text">
     </label>
     </div>
     <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-        <span>Mot de passe :</span>
+        <span>Mot de passe : <span class="text-red-500">*</span></span>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" placeholder="Mot de passe" required
                type="password">
     </label>
     <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-        <span>Email :</span>
+        <span>Email : <span class="text-red-500">*</span></span>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" placeholder="Email" required
                type="email">
     </label>
