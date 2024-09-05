@@ -52,7 +52,7 @@ def list_books():
 @app.route("/list-user", methods=["GET"])
 def list_user():
     page = request.args.get("page", 1, type=int)
-    per_page: int = 12
+    per_page: int = 8
     return render_template('user/list-user.html', data=UserController().get_all_users_page(page, per_page))
 
 
