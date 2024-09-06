@@ -13,7 +13,7 @@ controller_movement: MovementController = MovementController()
 def index():
     data = {
         "nb_books": len(controller_book.get_all_books()),
-        "nb_available_books": len(controller_book.available_books()),
+        "nb_available_books": len(controller_book.get_available_books()),
         "nb_users": len(controller_user.get_all_users())
     }
     return render_template('index.html', data=data)
