@@ -7,15 +7,30 @@ from math import ceil
 
 class MovementController:
     def __init__(self):
+        """
+        Constructor -> initialisation des models
+        """
         self.book: Book = Book("Titre", "Auteur", "ISBN", "paper")
         self.movement: MovementBook = MovementBook("ISBN", 1, "date", "date")
         self.user: User = User("<NAME>", "<NAME>", "<NAME>", "<NAME>")
 
     def get_all_movements(self):
+        """
+        Retourne toutes les movements
+        :return: liste de tous les movements
+        """
         return self.movement.get_all_movements()
 
     @staticmethod
     def create_movement(user_id: int, isbn: str, date_start: str, date_end: str):
+        """
+        Crée un nouveau mouvement
+        :param user_id: id de l'utilisateur
+        :param isbn: isbn du livre
+        :param date_start: date de début du mouvement
+        :param date_end: date de fin du mouvement
+        :return: str ->  message de réussite ou erreur
+        """
         list_movements = MovementController().get_movements_by_isbn(isbn)
         date_start = datetime.strptime(date_start, '%Y-%m-%d')
         date_end = datetime.strptime(date_end, '%Y-%m-%d')
@@ -32,6 +47,11 @@ class MovementController:
         return "ok"
 
     def get_movements_by_isbn(self, isbn: str):
+        """
+        Retourne tous les mouvements d'un livre
+        :param isbn: isbn du livre
+        :return: liste de tous les mouvements
+        """
         tmp_movement = self.movement.get_all_movement_by_isbn(isbn)
         if tmp_movement:
             for movement in tmp_movement:
@@ -41,6 +61,11 @@ class MovementController:
         return tmp_movement
 
     def get_movements_by_user_id(self, user_id: str):
+        """
+        Retourne tous les mouvements d'un utilisateur
+        :param user_id: id de l'utilisateur
+        :return: liste de tous les mouvements
+        """
         tmp_movements = self.movement.get_all_movements_by_user_id(user_id)
         for movement in tmp_movements:
             user_id: int = int(movement['user_id'])
@@ -51,10 +76,20 @@ class MovementController:
         return tmp_movements
 
     def get_movements_in_today(self):
+        """
+        Retourne tous les mouvements de la journée
+        :return: liste de tous les mouvements
+        """
         today = datetime.today()
         return self.movement.get_all_movements_in_today(today)
 
     def get_all_movements_page(self, page: int, per_page: int):
+        """
+        Retourne tous les mouvements -> gestion des pages impossible avec tinyDb
+        :param page: page courante
+        :param per_page: nombre de mouvements par page
+        :return: liste de tous les mouvements
+        """
         list_movements = self.get_all_movements()
         available_movements = self.get_movements_in_today()
         for movement in list_movements:
@@ -76,4 +111,10 @@ class MovementController:
         return data
 
     def delete_movements(self, movement_id: str, isbn: str):
+        """
+        Supprime un mouvement
+        :param movement_id: id du mouvement
+        :param isbn: isbn du livre
+        :return: str -> message de réussite ou erreur
+        """
         return self.movement.delete_movements(movement_id, isbn)
