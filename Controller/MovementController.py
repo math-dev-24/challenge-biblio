@@ -133,3 +133,12 @@ class MovementController:
             "user": self.user.get_user_by_id(int(movement['user_id']))[0],
         }
         return data
+
+    def update_movement(self, isbn: str, date_end: str) -> bool:
+        """
+        Mettre à jour un mouvement
+        :param isbn:
+        :param date_end:
+        :return:
+        """
+        return self.movement.update_movement(isbn, date_end)

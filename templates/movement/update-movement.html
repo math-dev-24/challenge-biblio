@@ -4,21 +4,42 @@
 <h1 class="text-3xl font-bold text-center mt-4 mb-8">Mettre à jour la réservation</h1>
 <main class="container mx-auto border px-8 py-4 rounded">
     <div>
-        <form method="POST">
             <div>
                 <p>Par : {{ data.user.first_name }} {{ data.user.last_name }}</p>
-                <p>Date : {{ data.movement.date_start }} - {{ data.movement.date_end }}</p>
+                <p id="date">Date : {{ data.movement.date_start }} - {{ data.movement.date_end }}</p>
                 <p>Livre : {{ data.book.title }} - {{ data.book.author }}</p>
             </div>
             <div class="h-0.5 bg-gray-200 w-full my-6"></div>
             <div>
-                <p>Modifier la date de fin : <input type="date" name="date_end"></p>
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-2">Modifier</button>
+                <p>
+                    <label for="date_end">Modifier la date de fin : </label>
+                    <input type="date" name="date_end" id="date_end">
+                </p>
+                <button onClick="updateMovement('{{ data.movement.isbn }}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-2">Modifier</button>
             </div>
-        </form>
+        <div id="ok" class="hidden border p-4 rounded my-4 bg-green-100">Modifié avec succès</div>
+        <div id="error" class="hidden border p-4 rounded my-4 bg-red-100">Oops, une erreur est survenue</div>
     </div>
 </main>
-{{ data }}
+<script>
+    function updateMovement(isbn) {
+        const date_end = new Date(document.getElementById("date_end").value);
+        fetch(`/api/v1/book/${isbn}/reserve-update`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
+            "reservation_date_end": date_end.toISOString().split("T")[0],
+        })})
+            .then(response => response.json())
+            .then(data => {
+                const date = document.getElementById("date");
+                date.innerHTML = "Date : " + data.movement.date_start + " - " + data.movement.date_end;
+                const ok = document.getElementById("ok");
+                ok.classList.remove("hidden");
+            })
+            .catch(e => {
+                const error = document.getElementById("error");
+                error.classList.remove("hidden");
+            });
+    }
+</script>
 
 
 

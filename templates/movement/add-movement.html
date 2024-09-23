@@ -1,6 +1,36 @@
 {% extends 'base/page.html' %}
 
 {% block content %}
-<h1 class="text-3xl font-bold text-center mt-4 mb-8">Ajouter une réservation</h1>
-
+<div class="container">
+    <aside class="border rounded shadow p-6 bg-white my-14 container mx-auto flex flex-col gap-4">
+        <h1 class="text-2xl text-center uppercase font-bold">Ajouter un emprunt</h1>
+        <div class="form-group">
+            <label for="books">Livre : </label>
+            <select class="form-control" id="books" name="books">
+                <option value="">Sélectionner un livre</option>
+                {% for book in books %}
+                <option value="{{ book.isbn }}">{{ book.title }} - {{ book.author }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="users">Utilisateur : </label>
+            <select class="form-control" id="users" name="users">
+                <option value="">Sélectionner un utilisateur</option>
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="reservation_date_start">Date de début</label>
+            <input type="date" class="form-control" id="reservation_date_start" name="reservation_date_start">
+        </div>
+        <div>
+            <label for="reservation_date_end">Date de fin</label>
+            <input type="date" class="form-control" id="reservation_date_end" name="reservation_date_end">
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </aside>
+</div>
 {% endblock %}

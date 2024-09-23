@@ -71,7 +71,9 @@ def view_list_movement():
 
 @app.route("/add-movement", methods=["GET"])
 def view_add_movement():
-    return render_template('movement/add-movement.html')
+    books = controller_book.get_all_books()
+    users = controller_user.get_all_users()
+    return render_template('movement/add-movement.html', books=books, users=users)
 
 
 @app.route("/update-movement/<isbn>/<user_id>", methods=["GET"])
@@ -196,6 +198,21 @@ def reserve_book(isbn):
         user_id = data.get('user_id')
         result: str = controller_movement.create_movement(user_id, isbn, date_start, date_end)
         return jsonify({"result": result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+@app.route('/api/v1/book/<isbn>/reserve-update', methods=["POST"])
+def update_reserve_book(isbn):
+    try:
+        data = request.json
+        date_end = data.get('reservation_date_end')
+        print(date_end, isbn)
+        result: bool = controller_movement.update_movement(isbn, date_end)
+        if not result:
+            return jsonify({"error": "Impossible de mettre à jour le mouvement"}), 400
+        movement = controller_movement.get_movements_by_isbn(isbn)[0]
+        return jsonify({"movement": movement}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 

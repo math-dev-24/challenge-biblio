@@ -62,3 +62,7 @@ class MovementBook(DbModel):
 
     def get_movement_by_isbn_and_user_id(self, isbn: str, user_id: str) -> dict:
         return self.movement_table.search(where('isbn') == isbn and where('user_id') == user_id)[0]
+
+    def update_movement(self, isbn: str, date_end: str) -> bool:
+        updated_movement: list = self.movement_table.update({'date_end': date_end}, where('isbn') == isbn)
+        return len(updated_movement) > 0
