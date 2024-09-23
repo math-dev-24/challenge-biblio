@@ -31,12 +31,10 @@
         const date = document.getElementById("date");
 
         error.classList.add("hidden");
-        error.innerHTML = "Oops, une erreur est survenue";
         ok.classList.add("hidden");
 
         if (date_start > date_end) {
-            error.classList.remove("hidden");
-            error.innerHTML = "La date de fin doit être supérieure à la date de début";
+            alert("La date de début doit être antérieure à la date de fin");
             return;
         }
 

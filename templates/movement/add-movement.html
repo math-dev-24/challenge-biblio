@@ -5,7 +5,7 @@
     <aside class="border rounded shadow p-6 bg-white my-14 container mx-auto flex flex-col gap-4">
         <h1 class="text-2xl text-center uppercase font-bold">Ajouter un emprunt</h1>
         <div class="form-group">
-            <label for="books">Livre : </label>
+            <label for="books">Livre : <span class="text-red-500">*</span></label>
             <select class="form-control" id="books" name="books">
                 <option value="">Sélectionner un livre</option>
                 {% for book in books %}
@@ -14,7 +14,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="users">Utilisateur : </label>
+            <label for="users">Utilisateur : <span class="text-red-500">*</span></label>
             <select class="form-control" id="users" name="users">
                 <option value="">Sélectionner un utilisateur</option>
                 {% for user in users %}
@@ -23,14 +23,50 @@
             </select>
         </div>
         <div>
-            <label for="reservation_date_start">Date de début</label>
+            <label for="reservation_date_start">Date de début : <span class="text-red-500">*</span></label>
             <input type="date" class="form-control" id="reservation_date_start" name="reservation_date_start">
         </div>
         <div>
-            <label for="reservation_date_end">Date de fin</label>
+            <label for="reservation_date_end">Date de fin : <span class="text-red-500">*</span></label>
             <input type="date" class="form-control" id="reservation_date_end" name="reservation_date_end">
         </div>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
+        <button onClick="addMovement()" class="bg-cyan-500 hover:bg-cyan-700 text-white font-bold py-2 px-4 rounded my-2">Ajouter</button>
+        <div id="ok" class="hidden border p-4 rounded my-4 bg-green-100">Ajouté avec succès</div>
+        <div id="error" class="hidden border p-4 rounded my-4 bg-red-100">Oops, une erreur est survenue</div>
     </aside>
 </div>
+<script>
+    function addMovement() {
+        let book_isbn = document.getElementById("books").value;
+        let user = document.getElementById("users").value;
+        let reservation_date_start = new Date(document.getElementById("reservation_date_start").value);
+        let reservation_date_end = new Date(document.getElementById("reservation_date_end").value);
+
+        if (reservation_date_start > reservation_date_end) {
+            alert("La date de début doit être antérieure à la date de fin");
+            return;
+        }
+
+        fetch(`/api/v1/book/${book_isbn}/reserve`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: user,
+                reservation_date_start: reservation_date_start.toISOString().split("T")[0],
+                reservation_date_end: reservation_date_end.toISOString().split("T")[0],
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.message === "ok") {
+                    ok.classList.remove("hidden");
+                } else {
+                    error.classList.remove("hidden");
+                    error.innerHTML = data.message;
+                }
+            });
+    }
+</script>
 {% endblock %}
