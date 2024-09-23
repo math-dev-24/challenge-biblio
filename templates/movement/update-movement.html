@@ -12,6 +12,7 @@
             <div class="h-0.5 bg-gray-200 w-full my-6"></div>
             <div>
                 <p>
+                    <input type="date" name="date_start" id="date_start" value="{{ data.movement.date_start }}" class="hidden">
                     <label for="date_end">Modifier la date de fin : </label>
                     <input type="date" name="date_end" id="date_end">
                 </p>
@@ -23,24 +24,34 @@
 </main>
 <script>
     function updateMovement(isbn) {
+        const date_start = new Date(document.getElementById("date_start").value);
         const date_end = new Date(document.getElementById("date_end").value);
+        const error = document.getElementById("error");
+        const ok = document.getElementById("ok");
+        const date = document.getElementById("date");
+
+        error.classList.add("hidden");
+        error.innerHTML = "Oops, une erreur est survenue";
+        ok.classList.add("hidden");
+
+        if (date_start > date_end) {
+            error.classList.remove("hidden");
+            error.innerHTML = "La date de fin doit être supérieure à la date de début";
+            return;
+        }
+
         fetch(`/api/v1/book/${isbn}/reserve-update`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
             "reservation_date_end": date_end.toISOString().split("T")[0],
         })})
             .then(response => response.json())
             .then(data => {
-                const date = document.getElementById("date");
                 date.innerHTML = "Date : " + data.movement.date_start + " - " + data.movement.date_end;
-                const ok = document.getElementById("ok");
                 ok.classList.remove("hidden");
             })
             .catch(e => {
-                const error = document.getElementById("error");
                 error.classList.remove("hidden");
             });
     }
 </script>
-
-
 
 {% endblock %}
