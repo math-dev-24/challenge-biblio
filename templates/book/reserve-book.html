@@ -1,6 +1,7 @@
 {% extends 'base/page.html' %}
 
 {% block content %}
+<main>
     <div class="container mx-auto my-4 border rounded p-6 bg-white drop-shadow">
         <h1 class="text-3xl font-bold text-center mt-4 mb-8">Réservé</h1>
         <div class="p-2 mx-2 border rounded">
@@ -46,7 +47,7 @@
             return;
         }
 
-        fetch(`api/v1/book/${isbn}/reserve`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
+        fetch(`/api/v1/book/${isbn}/reserve`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
             "reservation_date_start": reservation_date_start.toISOString().split("T")[0],
             "reservation_date_end": reservation_date_end.toISOString().split("T")[0],
                 "user_id": document.getElementById("user").value
@@ -66,6 +67,6 @@
             });
     }
 </script>
-</body>
+
 
 {% endblock %}

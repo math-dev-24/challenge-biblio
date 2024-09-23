@@ -66,7 +66,18 @@ def view_list_movement():
     page = request.args.get("page", 1, type=int)
     per_page: int = 12
     data = controller_movement.get_all_movements_page(page, per_page)
-    return render_template('list-movement.html', data=data)
+    return render_template('movement/list-movement.html', data=data)
+
+
+@app.route("/add-movement", methods=["GET"])
+def view_add_movement():
+    return render_template('movement/add-movement.html')
+
+
+@app.route("/update-movement/<isbn>/<user_id>", methods=["GET"])
+def view_update_movement(isbn, user_id):
+    data = controller_movement.get_movement_by_isbn_and_user_id(isbn, user_id)
+    return render_template('movement/update-movement.html', data=data)
 
 
 @app.route("/detail-user/<user_id>", methods=["GET"])
@@ -178,12 +189,15 @@ def create_user():
 
 @app.route('/api/v1/book/<isbn>/reserve', methods=["POST"])
 def reserve_book(isbn):
-    data = request.json
-    date_start = data.get('reservation_date_start')
-    date_end = data.get('reservation_date_end')
-    user_id = data.get('user_id')
-    result: str = controller_movement.create_movement(user_id, isbn, date_start, date_end)
-    return jsonify({"result": result}), 200
+    try:
+        data = request.json
+        date_start = data.get('reservation_date_start')
+        date_end = data.get('reservation_date_end')
+        user_id = data.get('user_id')
+        result: str = controller_movement.create_movement(user_id, isbn, date_start, date_end)
+        return jsonify({"result": result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 
 @app.route('/api/v1/book/<isbn>', methods=["DELETE"])

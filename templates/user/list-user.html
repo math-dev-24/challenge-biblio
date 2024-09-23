@@ -4,13 +4,21 @@
 <h1 class="text-3xl font-bold text-center mt-4 mb-8">Liste des utilisateurs</h1>
 <div class="flex w-full border rounded drop-shadow bg-white p-4 mb-4 gap-2 items-center justify-center">
     {% if data.page > 1 %}
-    <a class="mr-2 text-blue-500 hover:underline" href="/list-user?page=1"> << </a>
-    <a class="mr-2 text-blue-500 hover:underline" href="/list-user?page={{ data.page - 1 }}"> < </a>
+    <a class="ml-2 text-cyan-400 hover:text-cyan-700" href="/list-user?page=1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="m7.825 12l3.875 3.9q.275.275.288.688t-.288.712q-.275.275-.7.275t-.7-.275l-4.6-4.6q-.15-.15-.213-.325T5.426 12t.063-.375t.212-.325l4.6-4.6q.275-.275.688-.287t.712.287q.275.275.275.7t-.275.7zm6.6 0l3.875 3.9q.275.275.288.688t-.288.712q-.275.275-.7.275t-.7-.275l-4.6-4.6q-.15-.15-.213-.325T12.026 12t.063-.375t.212-.325l4.6-4.6q.275-.275.688-.287t.712.287q.275.275.275.7t-.275.7z"/></svg>
+    </a>
+    <a class="ml-2 text-cyan-400 hover:text-cyan-700" href="/list-user?page={{ data.page - 1 }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M10 22L0 12L10 2l1.775 1.775L3.55 12l8.225 8.225z"/></svg>
+    </a>
     {% endif %}
     <span>{{ data.page }} / {{ data.nb_pages }}</span>
     {% if data.page < data.nb_pages %}
-    <a class="ml-2 text-blue-500 hover:underline" href="/list-user?page={{ data.page + 1 }}"> ></a>
-    <a class="ml-2 text-blue-500 hover:underline" href="/list-user?page= {{ data.nb_pages }}"> >> </a>
+    <a class="ml-2 text-cyan-400 hover:text-cyan-700" href="/list-user?page={{ data.page + 1 }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="m14.475 12l-7.35-7.35q-.375-.375-.363-.888t.388-.887t.888-.375t.887.375l7.675 7.7q.3.3.45.675t.15.75t-.15.75t-.45.675l-7.7 7.7q-.375.375-.875.363T7.15 21.1t-.375-.888t.375-.887z"/></svg>
+    </a>
+    <a class="ml-2 text-cyan-400 hover:text-cyan-700" href="/list-user?page= {{ data.nb_pages }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M9.575 12L5.7 8.1q-.275-.275-.288-.687T5.7 6.7q.275-.275.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375t-.062.375t-.213.325l-4.6 4.6q-.275.275-.687.288T5.7 17.3q-.275-.275-.275-.7t.275-.7zm6.6 0L12.3 8.1q-.275-.275-.288-.687T12.3 6.7q.275-.275.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375t-.062.375t-.213.325l-4.6 4.6q-.275.275-.687.288T12.3 17.3q-.275-.275-.275-.7t.275-.7z"/></svg>
+    </a>
     {% endif %}
 </div>
 <table class="min-w-full divide-y divide-gray-200">
@@ -35,7 +43,7 @@
     </thead>
     <tbody class="bg-white divide-y divide-gray-200">
     {% for user in data.list_users %}
-    <tr id="{{ user.id }}">
+    <tr id="{{ user.id }}" class="hover:bg-gray-100">
         <td class="px-6 py-4 whitespace-nowrap">
             {{ user.id }}
         </td>
@@ -48,12 +56,12 @@
         <td class="px-6 py-4 whitespace-nowrap">
             {{ user.email }}
         </td>
-        <td class="px-6 py-4 whitespace-nowrap">
+        <td class="px-4 py-4 whitespace-nowrap flex">
             <a class="block text-gray-500 hover:text-gray-800 cursor-pointer" href="/update-user?user_id={{ user.id }}&first_name={{ user.first_name }}&last_name={{ user.last_name }}&email={{ user.email }}">
-                Modifier
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M9 15v-4.25l9.175-9.175q.3-.3.675-.45t.75-.15q.4 0 .763.15t.662.45L22.425 3q.275.3.425.663T23 4.4t-.137.738t-.438.662L13.25 15zm10.6-9.2l1.425-1.4l-1.4-1.4L18.2 4.4zM5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h8.925L7 9.925V17h7.05L21 10.05V19q0 .825-.587 1.413T19 21z"/></svg>
             </a>
             <div class="text-red-500 hover:text-red-800 cursor-pointer" onclick="deleteUser('{{ user.id }}')">
-                Supprimer
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"/></svg>
             </div>
         </td>
     </tr>

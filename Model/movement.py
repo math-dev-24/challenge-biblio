@@ -59,3 +59,6 @@ class MovementBook(DbModel):
     def delete_movement_by_user_id(self, user_id: int) -> bool:
         deleted_movement: list = self.movement_table.remove(where('user_id') == user_id)
         return len(deleted_movement) > 0
+
+    def get_movement_by_isbn_and_user_id(self, isbn: str, user_id: str) -> dict:
+        return self.movement_table.search(where('isbn') == isbn and where('user_id') == user_id)[0]

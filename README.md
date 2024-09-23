@@ -71,3 +71,4 @@ Créer une application de gestion de livres.
 - [ ] Date de création du livre et date de dernière modification
 - [ ] Date de création de la réservation et date de dernière modification
 - [ ] Date de création de l'utilisateur et date de dernière modification
+- [ ] Modification des dates de réservation

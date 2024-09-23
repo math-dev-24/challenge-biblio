@@ -118,3 +118,18 @@ class MovementController:
         :return: str -> message de réussite ou erreur
         """
         return self.movement.delete_movements(movement_id, isbn)
+
+    def get_movement_by_isbn_and_user_id(self, isbn: str, user_id: str):
+        """
+        Retourne un mouvement par son isbn et son id
+        :param isbn: isbn du livre
+        :param user_id: id de l'utilisateur
+        :return: Movement -> le mouvement
+        """
+        movement = self.movement.get_movement_by_isbn_and_user_id(isbn, user_id)
+        data = {
+            "movement": movement,
+            "book": self.book.get_book(movement['isbn']),
+            "user": self.user.get_user_by_id(int(movement['user_id']))[0],
+        }
+        return data
